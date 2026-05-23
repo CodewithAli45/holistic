@@ -159,7 +159,7 @@ export default function StatusIndicator() {
           Recovery Tracked
         </span>
         <span className="bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
-          FlexiRecover v1.0
+          Flexi v1.0
         </span>
       </div>
     </div>

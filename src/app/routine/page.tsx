@@ -49,7 +49,7 @@ export default function RoutinePage() {
             In standard distal radius fracture rehabilitation, the target active range is roughly **80-90° flexion** (bending forward), **70° extension** (bending backward), and **80-90° pronation/supination** (forearm rotation). Focus on reaching comfortable thresholds and never push into acute sharp pain.
           </p>
           <div className="flex items-center gap-1.5 text-[10px] text-primary font-black uppercase tracking-wider pt-1.5">
-            <ShieldCheck className="w-4 h-4 text-secondary-hover" /> Verified by FlexiRecover Clinical Engine
+            <ShieldCheck className="w-4 h-4 text-secondary-hover" /> Verified by Flexi Clinical Engine
           </div>
         </div>
       </div>

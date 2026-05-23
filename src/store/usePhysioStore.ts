@@ -33,19 +33,9 @@ interface PhysioState {
   resetAllData: () => void;
 }
 
-// Helper to generate dynamic dates relative to today
-const formatDate = (d: Date) => d.toISOString().split('T')[0];
-
-const getPastDateStr = (daysAgo: number) => {
-  const d = new Date();
-  d.setDate(d.getDate() - daysAgo);
-  return formatDate(d);
-};
-
 const getSeedLogs = (): Record<string, LogEntry> => {
   const seed: Record<string, LogEntry> = {};
   
-  // Dynamic seed logs for 7 consecutive days up to yesterday
   const notes = [
     "First day after cast removal. Wrist is incredibly stiff, and minor swelling around distal radius.",
     "Fingers are moving slightly better. Still substantial tightness when trying to rotate.",
@@ -56,23 +46,32 @@ const getSeedLogs = (): Record<string, LogEntry> => {
     "Steady progress. Wrist flexion reached 50 degrees today. Recovery is on track."
   ];
 
-  for (let i = 6; i >= 0; i--) {
-    const dateStr = getPastDateStr(i);
-    // Linearly improving metrics for beautiful charts
-    const progressFactor = 6 - i; // 0 to 6
+  // Static historical dates ending on 2026-05-21 (Start date of actual tracking is 2026-05-22)
+  const staticDates = [
+    "2026-05-15",
+    "2026-05-16",
+    "2026-05-17",
+    "2026-05-18",
+    "2026-05-19",
+    "2026-05-20",
+    "2026-05-21"
+  ];
+
+  for (let i = 0; i < 7; i++) {
+    const dateStr = staticDates[i];
     seed[dateStr] = {
       date: dateStr,
-      painLevel: Math.max(8 - Math.round(progressFactor * 0.8), 2),
-      gripStrength: parseFloat((4.0 + progressFactor * 0.75).toFixed(1)),
+      painLevel: Math.max(8 - Math.round(i * 0.8), 2),
+      gripStrength: parseFloat((4.0 + i * 0.75).toFixed(1)),
       mobility: {
-        flexion: 20 + progressFactor * 5,
-        extension: 15 + progressFactor * 4,
-        rotation: 30 + progressFactor * 7,
+        flexion: 20 + i * 5,
+        extension: 15 + i * 4,
+        rotation: 30 + i * 7,
       },
       exercisesCompleted: i % 2 === 0 
         ? ['finger-open-close', 'wrist-rotation']
         : ['finger-open-close', 'wrist-flexion-extension', 'wrist-rotation', 'soft-ball-squeezing'],
-      notes: notes[progressFactor] || "Continuing physical therapy daily."
+      notes: notes[i] || "Continuing physical therapy daily."
     };
   }
   
@@ -189,7 +188,18 @@ export const usePhysioStore = create<PhysioState>()(
       }),
     }),
     {
-      name: 'flexirecover-storage', // key in local storage
+      name: 'flexi-storage', // key in local storage
+      merge: (persistedState, initialState) => {
+        const persisted = persistedState as PhysioState | undefined;
+        return {
+          ...initialState,
+          ...persisted,
+          logs: {
+            ...initialState.logs,
+            ...(persisted?.logs || {}),
+          },
+        };
+      },
     }
   )
 );

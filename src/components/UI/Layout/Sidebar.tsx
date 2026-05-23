@@ -39,7 +39,7 @@ export default function Sidebar() {
           <HeartPulse className="w-6 h-6 animate-pulse" />
         </div>
         <div>
-          <h1 className="font-bold text-lg text-text-main leading-tight tracking-tight">FlexiRecover</h1>
+          <h1 className="font-bold text-lg text-text-main leading-tight tracking-tight">Flexi</h1>
           <p className="text-xs text-text-muted font-medium">Physiotherapy Tracker</p>
         </div>
       </div>
