@@ -1,6 +1,7 @@
 'use client';
 
 import RoutineChecklist from '@/components/Routine/RoutineChecklist';
+import BgThemeSelector from '@/components/Routine/BgThemeSelector';
 import { CalendarRange, Info, ShieldCheck, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -35,6 +36,9 @@ export default function RoutinePage() {
 
       {/* Routine Checklists Component */}
       <RoutineChecklist />
+
+      {/* Background Theme Selector */}
+      <BgThemeSelector />
 
       {/* Quick Clinical Info Panel */}
       <div className="bg-sky-50/50 border border-sky-100 rounded-3xl p-6 shadow-inner flex flex-col sm:flex-row gap-5 items-start">

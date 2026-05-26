@@ -5,6 +5,7 @@ import Sidebar from './Sidebar';
 import Header from './Header';
 import { Menu, X, HeartPulse } from 'lucide-react';
 import Link from 'next/link';
+import { usePhysioStore } from '@/store/usePhysioStore';
 
 interface LayoutWrapperProps {
   children: ReactNode;
@@ -13,10 +14,102 @@ interface LayoutWrapperProps {
 export default function LayoutWrapper({ children }: LayoutWrapperProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  
+  const dailyBgEnabled = usePhysioStore((state) => state.dailyBgEnabled);
+  const previewBgDay = usePhysioStore((state) => state.previewBgDay);
+  const setPreviewBgDay = usePhysioStore((state) => state.setPreviewBgDay);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    setPreviewBgDay(null); // Reset preview on load
+  }, [setPreviewBgDay]);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    if (dailyBgEnabled) {
+      // Complete theme palettes corresponding to Sunday (0) through Saturday (6)
+      const themePalettes = [
+        {
+          bg: '#FAF6EE', // Sunday - Soft Beige
+          primary: '#8B5A2B',
+          primaryHover: '#704820',
+          primaryLight: '#F5ECE0',
+          textMain: '#2C1E11',
+          borderCard: '#EADCC9',
+        },
+        {
+          bg: '#E6FCFF', // Monday - Light Cyan
+          primary: '#0891B2',
+          primaryHover: '#0E7490',
+          primaryLight: '#CFFAFE',
+          textMain: '#083344',
+          borderCard: '#BFEFF2',
+        },
+        {
+          bg: '#FDF2F8', // Tuesday - Light Pink / Magenta
+          primary: '#DB2777',
+          primaryHover: '#BE185D',
+          primaryLight: '#FCE7F3',
+          textMain: '#500724',
+          borderCard: '#FBCFE8',
+        },
+        {
+          bg: '#FFFDEB', // Wednesday - Warm Gold
+          primary: '#D97706',
+          primaryHover: '#B45309',
+          primaryLight: '#FEF3C7',
+          textMain: '#451A03',
+          borderCard: '#FDE68A',
+        },
+        {
+          bg: '#FAF5FF', // Thursday - Lilac Mist / Lavender
+          primary: '#7C3AED',
+          primaryHover: '#6D28D9',
+          primaryLight: '#F3E8FF',
+          textMain: '#2E1065',
+          borderCard: '#E9D5FF',
+        },
+        {
+          bg: '#F0FDF4', // Friday - Fresh Mint
+          primary: '#059669',
+          primaryHover: '#047857',
+          primaryLight: '#D1FAE5',
+          textMain: '#064E3B',
+          borderCard: '#A7F3D0',
+        },
+        {
+          bg: '#FFF7ED', // Saturday - Peach Cream
+          primary: '#EA580C',
+          primaryHover: '#C2410C',
+          primaryLight: '#FFEDD5',
+          textMain: '#431407',
+          borderCard: '#FED7AA',
+        },
+      ];
+
+      // Determine which day's palette to show
+      const activeDay = previewBgDay !== null ? previewBgDay : new Date().getDay();
+      const palette = themePalettes[activeDay] || themePalettes[0];
+      
+      const rootStyle = document.documentElement.style;
+      rootStyle.setProperty('--color-bg-base', palette.bg);
+      rootStyle.setProperty('--color-primary', palette.primary);
+      rootStyle.setProperty('--color-primary-hover', palette.primaryHover);
+      rootStyle.setProperty('--color-primary-light', palette.primaryLight);
+      rootStyle.setProperty('--color-text-main', palette.textMain);
+      rootStyle.setProperty('--color-border-card', palette.borderCard);
+    } else {
+      // Revert to original CSS theme variables
+      const rootStyle = document.documentElement.style;
+      rootStyle.removeProperty('--color-bg-base');
+      rootStyle.removeProperty('--color-primary');
+      rootStyle.removeProperty('--color-primary-hover');
+      rootStyle.removeProperty('--color-primary-light');
+      rootStyle.removeProperty('--color-text-main');
+      rootStyle.removeProperty('--color-border-card');
+    }
+  }, [mounted, dailyBgEnabled, previewBgDay]);
 
   if (!mounted) {
     return (
@@ -62,7 +155,7 @@ export default function LayoutWrapper({ children }: LayoutWrapperProps) {
           ></div>
           
           {/* Sidebar Panel */}
-          <div className="relative w-64 bg-white flex flex-col h-full shadow-2xl animate-in slide-in-from-left duration-300">
+          <div className="relative w-64 bg-bg-base flex flex-col h-full shadow-2xl animate-in slide-in-from-left duration-300">
             <Sidebar />
           </div>
         </div>

@@ -56,7 +56,7 @@ export default function Sidebar() {
               className={`flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group ${
                 isActive
                   ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02]'
-                  : 'text-text-muted hover:bg-slate-100 hover:text-text-main'
+                  : 'text-text-muted hover:bg-primary-light/40 hover:text-text-main'
               }`}
             >
               <Icon className={`w-5 h-5 smooth-transition ${

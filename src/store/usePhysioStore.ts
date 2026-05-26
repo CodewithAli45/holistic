@@ -22,6 +22,8 @@ interface PhysioState {
   recoveryStage: RecoveryStage;
   remindersEnabled: boolean;
   remindersTime: string; // e.g. "09:00"
+  dailyBgEnabled: boolean;
+  previewBgDay: number | null;
   
   // Actions
   addLogEntry: (date: string, data: Partial<LogEntry>) => void;
@@ -29,6 +31,8 @@ interface PhysioState {
   updateRecoveryStage: (stage: RecoveryStage) => void;
   toggleReminders: () => void;
   updateReminderTime: (time: string) => void;
+  toggleDailyBg: () => void;
+  setPreviewBgDay: (day: number | null) => void;
   setStreak: (streak: number) => void;
   resetAllData: () => void;
 }
@@ -86,6 +90,8 @@ export const usePhysioStore = create<PhysioState>()(
       recoveryStage: 'Mid',
       remindersEnabled: true,
       remindersTime: '08:30',
+      dailyBgEnabled: true,
+      previewBgDay: null,
       
       addLogEntry: (date, data) => set((state) => {
         const existing = state.logs[date] || {
@@ -177,6 +183,8 @@ export const usePhysioStore = create<PhysioState>()(
       updateRecoveryStage: (recoveryStage) => set({ recoveryStage }),
       toggleReminders: () => set((state) => ({ remindersEnabled: !state.remindersEnabled })),
       updateReminderTime: (remindersTime) => set({ remindersTime }),
+      toggleDailyBg: () => set((state) => ({ dailyBgEnabled: !state.dailyBgEnabled })),
+      setPreviewBgDay: (previewBgDay) => set({ previewBgDay }),
       setStreak: (streak) => set({ streak }),
       
       resetAllData: () => set({
@@ -185,6 +193,8 @@ export const usePhysioStore = create<PhysioState>()(
         recoveryStage: 'Mid',
         remindersEnabled: true,
         remindersTime: '08:30',
+        dailyBgEnabled: true,
+        previewBgDay: null,
       }),
     }),
     {
